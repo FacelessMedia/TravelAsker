@@ -43,35 +43,85 @@ function processContent(content) {
 
 function buildSchemas(post, headings, catMap, breadcrumbItems, processedContent) {
   const cats = (post.categories || []).map(c => catMap[c]?.name || c);
+  const postUrl = `${SITE_URL}/${post.slug}/`;
+  const authorName = post.authorDisplay || post.author;
+  const authorSlug = authorName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const description = stripHtml(post.excerpt).substring(0, 160);
 
-  const articleSchema = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "headline": post.title,
-    "description": stripHtml(post.excerpt).substring(0, 160),
-    "datePublished": isoDate(post.dateGmt),
-    "dateModified": isoDate(post.modifiedGmt),
-    "author": { "@type": "Person", "name": post.authorDisplay || post.author },
-    "publisher": {
-      "@type": "Organization",
-      "name": "TravelAsker",
-      "url": SITE_URL,
-      "logo": { "@type": "ImageObject", "url": `${SITE_URL}/logo.png` }
-    },
-    "mainEntityOfPage": { "@type": "WebPage", "@id": `${SITE_URL}/${post.slug}/` },
-    "articleSection": cats.length > 0 ? cats[0] : "Travel",
-    "keywords": (post.tags || []).join(', ')
+  const orgEntity = {
+    "@type": "Organization",
+    "@id": `${SITE_URL}/#organization`,
+    "name": "TravelAsker",
+    "url": SITE_URL,
+    "logo": {
+      "@type": "ImageObject",
+      "@id": `${SITE_URL}/#logo`,
+      "url": `${SITE_URL}/travelasker_logo.svg`,
+      "contentUrl": `${SITE_URL}/travelasker_logo.svg`,
+      "caption": "TravelAsker",
+      "inLanguage": "en-US",
+      "width": 512,
+      "height": 512
+    }
   };
 
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
+  const websiteEntity = {
+    "@type": "WebSite",
+    "@id": `${SITE_URL}/#website`,
+    "url": SITE_URL,
+    "name": "TravelAsker",
+    "publisher": { "@type": "Organization", "@id": `${SITE_URL}/#organization` },
+    "inLanguage": "en-US"
+  };
+
+  const breadcrumbEntity = {
     "@type": "BreadcrumbList",
+    "@id": `${postUrl}#breadcrumb`,
     "itemListElement": breadcrumbItems.map((item, i) => ({
-      "@type": "ListItem", "position": i + 1, "name": item.name, "item": item.url
+      "@type": "ListItem",
+      "position": i + 1,
+      "item": { "@type": "Thing", "@id": item.url, "name": item.name }
     }))
   };
 
-  const schemas = [articleSchema, breadcrumbSchema];
+  const webpageEntity = {
+    "@type": "WebPage",
+    "@id": `${postUrl}#webpage`,
+    "url": postUrl,
+    "name": post.title,
+    "datePublished": isoDate(post.dateGmt),
+    "dateModified": isoDate(post.modifiedGmt),
+    "isPartOf": { "@type": "WebSite", "@id": `${SITE_URL}/#website` },
+    "inLanguage": "en-US",
+    "breadcrumb": { "@type": "BreadcrumbList", "@id": `${postUrl}#breadcrumb` }
+  };
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.title,
+    "name": post.title,
+    "description": description,
+    "datePublished": isoDate(post.dateGmt),
+    "dateModified": isoDate(post.modifiedGmt),
+    "articleSection": cats.length > 0 ? cats[0] : "Travel",
+    "author": {
+      "@type": "Person",
+      "@id": `${SITE_URL}/author/${authorSlug}/`,
+      "name": authorName,
+      "url": `${SITE_URL}/author/${authorSlug}/`,
+      "worksFor": { "@type": "Organization", "@id": `${SITE_URL}/#organization` }
+    },
+    "publisher": orgEntity,
+    "inLanguage": "en-US",
+    "@id": `${postUrl}#richSnippet`,
+    "isPartOf": webpageEntity,
+    "mainEntityOfPage": { "@type": "WebPage", "@id": `${postUrl}#webpage` },
+    "breadcrumb": breadcrumbEntity,
+    "keywords": (post.tags || []).join(', ')
+  };
+
+  const schemas = [articleSchema];
 
   // FAQ schema for question-style headings
   const questions = headings.filter(h =>
