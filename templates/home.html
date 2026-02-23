@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}}</title>
+  <meta name="description" content="{{META_DESCRIPTION}}">
+  <link rel="canonical" href="{{CANONICAL_URL}}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{OG_TITLE}}">
+  <meta property="og:description" content="{{OG_DESCRIPTION}}">
+  <meta property="og:url" content="{{OG_URL}}">
+  <meta property="og:site_name" content="TravelAsker">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{OG_TITLE}}">
+  <meta name="twitter:description" content="{{OG_DESCRIPTION}}">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  {{SCHEMA_MARKUP}}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  {{HEADER}}
+
+  <main class="home-page">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-content">
+          <h1 class="hero-title">Travel Guides by<br><span class="hero-highlight">Locals & Experts</span></h1>
+          <p class="hero-subtitle">Maximize your travel with expert advice, in-depth guides, honest reviews, and insider tips from {{TOTAL_POSTS}}+ articles covering destinations worldwide.</p>
+        </div>
+        <div class="hero-decoration">
+          <svg viewBox="0 0 200 200" class="hero-globe">
+            <circle cx="100" cy="100" r="90" fill="none" stroke="currentColor" stroke-width="1" opacity="0.2"/>
+            <ellipse cx="100" cy="100" rx="90" ry="40" fill="none" stroke="currentColor" stroke-width="1" opacity="0.15" transform="rotate(-20, 100, 100)"/>
+            <ellipse cx="100" cy="100" rx="40" ry="90" fill="none" stroke="currentColor" stroke-width="1" opacity="0.15"/>
+            <circle cx="100" cy="100" r="4" fill="currentColor" opacity="0.3"/>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Explore by Continent -->
+    <section class="continents-section">
+      <div class="section-inner">
+        <h2 class="section-title">Explore the World</h2>
+        <p class="section-subtitle">Choose a continent to start your journey</p>
+        <div class="continents-grid">
+          {{CONTINENTS}}
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Articles -->
+    <section class="recent-section">
+      <div class="section-inner">
+        <h2 class="section-title">Recent Articles</h2>
+        <p class="section-subtitle">The latest travel guides and insights</p>
+        <div class="posts-grid">
+          {{RECENT_POSTS}}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  {{FOOTER}}
+
+  <script src="/assets/main.js"></script>
+</body>
+</html>

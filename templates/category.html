@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}} - TravelAsker</title>
+  <meta name="description" content="{{META_DESCRIPTION}}">
+  <link rel="canonical" href="{{CANONICAL_URL}}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{OG_TITLE}}">
+  <meta property="og:description" content="{{OG_DESCRIPTION}}">
+  <meta property="og:url" content="{{OG_URL}}">
+  <meta property="og:site_name" content="TravelAsker">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{OG_TITLE}}">
+  <meta name="twitter:description" content="{{OG_DESCRIPTION}}">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  {{SCHEMA_MARKUP}}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body>
+  {{HEADER}}
+
+  <main class="category-page">
+    <div class="category-container">
+      {{BREADCRUMBS}}
+
+      <header class="category-header">
+        <h1 class="category-title">{{CATEGORY_NAME}}</h1>
+        {{CATEGORY_DESCRIPTION}}
+        <span class="category-count">{{POST_COUNT}} articles</span>
+      </header>
+
+      {{SUBCATEGORIES}}
+
+      <section class="category-posts">
+        <div class="posts-grid">
+          {{POST_LIST}}
+        </div>
+      </section>
+    </div>
+  </main>
+
+  {{FOOTER}}
+
+  <script src="/assets/main.js"></script>
+</body>
+</html>
