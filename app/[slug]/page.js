@@ -108,7 +108,7 @@ function buildSchemas(post, headings, catMap, breadcrumbItems, processedContent)
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug) || getPage(slug);
+  const post = (await getPostBySlug(slug)) || getPage(slug);
   if (!post) return { title: 'Not Found' };
 
   const description = stripHtml(post.excerpt || post.content).substring(0, 160);
@@ -131,7 +131,7 @@ export async function generateMetadata({ params }) {
 
 export default async function PostPage({ params }) {
   const { slug } = await params;
-  const post = getPostBySlug(slug);
+  const post = await getPostBySlug(slug);
   const page = !post ? getPage(slug) : null;
   const item = post || page;
 

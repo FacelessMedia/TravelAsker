@@ -173,7 +173,8 @@ async function extract() {
   // Clean dist
   if (fs.existsSync(DATA_DIR)) fs.rmSync(DATA_DIR, { recursive: true });
   ensureDir(DATA_DIR);
-  ensureDir(path.join(DATA_DIR, 'posts'));
+  const PUBLIC_POSTS_DIR = path.join(__dirname, 'public', 'data', 'posts');
+  ensureDir(PUBLIC_POSTS_DIR);
 
   // ── Save categories ──
   const catSize = writeGzip(path.join(DATA_DIR, 'categories.json'), categories);
@@ -221,7 +222,7 @@ async function extract() {
       }
     }
     writeGzip(
-      path.join(DATA_DIR, 'posts', `chunk-${chunkNum}.json`),
+      path.join(PUBLIC_POSTS_DIR, `chunk-${chunkNum}.json`),
       chunkData
     );
     chunkNum++;
