@@ -13,7 +13,7 @@ export default function Footer() {
             <p className="footer-tagline">Your essential travel companion. Maximize your travel with destination guides, travel advice, reviews, and more from TravelAsker.</p>
             <div className="footer-brand-links">
               <Link href="/about-us/">About</Link>
-              <Link href="/terms-and-conditions/">Terms &amp; Conditions</Link>
+              <Link href="/terms-of-use/">Terms &amp; Conditions</Link>
               <Link href="/privacy-policy/">Privacy Policy</Link>
               <Link href="/contact-us/">Contact</Link>
             </div>
