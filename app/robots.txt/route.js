@@ -1,7 +1,8 @@
 export async function GET() {
   const body = `User-agent: *
-Allow: /
-Sitemap: https://travelasker.com/sitemap.xml
+Disallow:
+
+Sitemap: https://travelasker.com/sitemap_index.xml
 `;
   return new Response(body, {
     headers: { 'Content-Type': 'text/plain' }

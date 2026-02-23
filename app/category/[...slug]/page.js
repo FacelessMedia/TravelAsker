@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getCategories, getCategoryMap, getCategoryPosts, getCategoryHierarchy, stripHtml, formatDate, isoDate } from '../../../lib/data';
+import { getCategories, getCategoryMap, getCategoryPosts, getCategoryHierarchy, getCategoryByPath, getCategoryPath, stripHtml } from '../../../lib/data';
 import PostCard from '../../components/PostCard';
 
 const SITE_URL = 'https://travelasker.com';
@@ -10,19 +10,19 @@ export const dynamicParams = true;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const catMap = getCategoryMap();
-  const cat = catMap[slug];
+  const cat = getCategoryByPath(slug);
   if (!cat) return { title: 'Not Found' };
 
+  const catPath = getCategoryPath(cat.slug);
   const desc = stripHtml((cat.description || '').replace(/\[subcategory[^\]]*\]/g, '')).substring(0, 160);
   return {
     title: cat.name,
     description: desc || `Explore ${cat.name} travel guides and articles on TravelAsker.`,
-    alternates: { canonical: `${SITE_URL}/category/${slug}/` },
+    alternates: { canonical: `${SITE_URL}/category/${catPath}/` },
     openGraph: {
       title: `${cat.name} - TravelAsker`,
       description: desc,
-      url: `${SITE_URL}/category/${slug}/`,
+      url: `${SITE_URL}/category/${catPath}/`,
       type: 'website'
     }
   };
@@ -30,18 +30,19 @@ export async function generateMetadata({ params }) {
 
 export default async function CategoryPage({ params }) {
   const { slug } = await params;
-  const catMap = getCategoryMap();
-  const cat = catMap[slug];
+  const cat = getCategoryByPath(slug);
   if (!cat) notFound();
 
+  const catMap = getCategoryMap();
   const categories = getCategories();
-  const posts = getCategoryPosts(slug);
-  const hierarchy = getCategoryHierarchy(slug, catMap);
-  const subcats = categories.filter(c => c.parent === slug);
+  const posts = getCategoryPosts(cat.slug);
+  const hierarchy = getCategoryHierarchy(cat.slug, catMap);
+  const subcats = categories.filter(c => c.parent === cat.slug);
 
   const breadcrumbItems = [{ name: 'Home', url: SITE_URL }];
   for (const c of hierarchy) {
-    breadcrumbItems.push({ name: c.name, url: `${SITE_URL}/category/${c.slug}/` });
+    const cPath = getCategoryPath(c.slug);
+    breadcrumbItems.push({ name: c.name, url: `${SITE_URL}/category/${cPath}/` });
   }
 
   const breadcrumbSchema = {
@@ -83,11 +84,14 @@ export default async function CategoryPage({ params }) {
 
           {subcats.length > 0 && (
             <div className="subcategories-grid">
-              {subcats.map(sc => (
-                <Link key={sc.slug} href={`/category/${sc.slug}/`} className="subcategory-card">
-                  <span className="subcategory-name">{sc.name}</span>
-                </Link>
-              ))}
+              {subcats.map(sc => {
+                const scPath = getCategoryPath(sc.slug);
+                return (
+                  <Link key={sc.slug} href={`/category/${scPath}/`} className="subcategory-card">
+                    <span className="subcategory-name">{sc.name}</span>
+                  </Link>
+                );
+              })}
             </div>
           )}
 

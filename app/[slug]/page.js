@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getPostBySlug, getPage, getCategoryMap, getCategoryHierarchy, stripHtml, formatDate, isoDate } from '../../lib/data';
+import { getPostBySlug, getPage, getCategoryMap, getCategoryHierarchy, getCategoryPath, stripHtml, formatDate, isoDate } from '../../lib/data';
 
 const SITE_URL = 'https://travelasker.com';
 
@@ -158,7 +158,8 @@ export default async function PostPage({ params }) {
 
   const breadcrumbItems = [{ name: 'Home', url: SITE_URL }];
   for (const c of catHierarchy) {
-    breadcrumbItems.push({ name: c.name, url: `${SITE_URL}/category/${c.slug}/` });
+    const cPath = getCategoryPath(c.slug);
+    breadcrumbItems.push({ name: c.name, url: `${SITE_URL}/category/${cPath}/` });
   }
   breadcrumbItems.push({ name: item.title, url: `${SITE_URL}/${item.slug}/` });
 
@@ -196,9 +197,10 @@ export default async function PostPage({ params }) {
           <article className="post-article" itemScope itemType="https://schema.org/Article">
             <header className="post-header">
               <div className="post-meta-top">
-                {postCats.map(c => (
-                  <Link key={c.slug} href={`/category/${c.slug}/`} className="category-link">{c.name}</Link>
-                ))}
+                {postCats.map(c => {
+                  const cPath = getCategoryPath(c.slug);
+                  return <Link key={c.slug} href={`/category/${cPath}/`} className="category-link">{c.name}</Link>;
+                })}
               </div>
               <h1 className="post-title" itemProp="headline">{item.title}</h1>
               {(item.authorDisplay || item.date) && (
@@ -206,8 +208,7 @@ export default async function PostPage({ params }) {
                   <div className="post-meta-left">
                     {item.authorDisplay && (
                       <span className="post-author" itemProp="author" itemScope itemType="https://schema.org/Person">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="meta-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                        <span itemProp="name">{item.authorDisplay}</span>
+                        By <Link href={`/author/${item.author.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}/`} itemProp="url"><span itemProp="name">{item.authorDisplay}</span></Link>
                       </span>
                     )}
                     {item.dateGmt && (
